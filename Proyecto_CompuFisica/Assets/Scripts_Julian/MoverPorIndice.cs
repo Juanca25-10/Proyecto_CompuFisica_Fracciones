@@ -10,6 +10,7 @@ public class JuegoTablero : MonoBehaviour
 
     [Header("Cámaras Virtuales de Cinemachine")]
     public GameObject[] camarasVirtuales;
+    public GameObject camaraGlobalTablero; // <- NUEVO: Para la vista panorámica
 
     [Header("Dados 3D de los Jugadores")]
     public GameObject[] dadosJugadores;
@@ -26,7 +27,7 @@ public class JuegoTablero : MonoBehaviour
         new Vector3(0, 90, 0),      // Cara 3
         new Vector3(0, -90, 0),     // Cara 4
         new Vector3(-90, 0, 0),     // Cara 5
-        new Vector3(180, 0, 0)      // Cara 6 (Ajusta estos ángulos según tu modelo)
+        new Vector3(180, 0, 0)      // Cara 6
     };
 
     [Header("Posiciones (Se llenan solas)")]
@@ -52,6 +53,7 @@ public class JuegoTablero : MonoBehaviour
 
         ActualizarCamarasCinemachine();
         OcultarTodosLosDados();
+        if (camaraGlobalTablero != null) camaraGlobalTablero.SetActive(false);
     }
 
     private void BuscarPosicionesAutomaticamente()
@@ -69,27 +71,68 @@ public class JuegoTablero : MonoBehaviour
         posiciones = listaTemporal.ToArray();
     }
 
+    // Mantiene compatibilidad con el teclado de tu amigo
     public void TurnoAvanzar(InputAction.CallbackContext context)
     {
-        if (!context.performed || juegoTerminado || estaProcesandoTurno) return;
+        if (!context.performed) return;
+        LanzarDadoFisico();
+    }
+
+    // =========================================================================
+    // NUEVAS FUNCIONES PARA TU CONTROL ARDUINO
+    // =========================================================================
+
+    // Al agitar el cubo, llamaremos a esta función
+    public void LanzarDadoFisico()
+    {
+        if (juegoTerminado || estaProcesandoTurno) return;
         StartCoroutine(SecuenciaTurnoCompleta());
     }
+
+    // Botón Izquierdo: Celebración con salto
+    public void CelebrarJugador()
+    {
+        if (estaProcesandoTurno || juegoTerminado) return;
+        StartCoroutine(RutinaSaltoCelebracion());
+    }
+
+    private IEnumerator RutinaSaltoCelebracion()
+    {
+        GameObject ficha = jugadores[turnoActual];
+        Vector3 posOriginal = posiciones[casillasActuales[turnoActual]].position;
+        float t = 0;
+        while (t < 1f)
+        {
+            t += Time.deltaTime * 4f; // Salto rápido y divertido
+            Vector3 posActual = posOriginal;
+            posActual.y += Mathf.Sin(t * Mathf.PI) * 0.8f;
+            ficha.transform.position = posActual;
+            yield return null;
+        }
+        ficha.transform.position = posOriginal;
+    }
+
+    // Botón Derecha: Alternar vista del mapa
+    public void AlternarCamaraGlobal()
+    {
+        if (camaraGlobalTablero == null) return;
+
+        // El signo '!' significa "lo contrario". 
+        // Si está activa se apaga, si está apagada se enciende.
+        camaraGlobalTablero.SetActive(!camaraGlobalTablero.activeSelf);
+    }
+    // =========================================================================
 
     private IEnumerator SecuenciaTurnoCompleta()
     {
         estaProcesandoTurno = true;
 
-        // 1. Mostrar el dado del jugador actual
         GameObject dadoActual = dadosJugadores[turnoActual];
         if (dadoActual != null) dadoActual.SetActive(true);
 
-        // 2. Lanzar el dado matemáticamente
         int resultadoDado = Random.Range(1, 7);
         Debug.Log($"🎲 <b>Jugador {turnoActual + 1}</b> está lanzando el dado...");
 
-        // =========================================================================
-        // 3. ANIMACIÓN DE ROTACIÓN POR TIEMPO (GIRO CAÓTICO)
-        // =========================================================================
         float velocidadX = Random.Range(600f, 1200f) * (Random.value > 0.5f ? 1 : -1);
         float velocidadY = Random.Range(600f, 1200f) * (Random.value > 0.5f ? 1 : -1);
         float velocidadZ = Random.Range(600f, 1200f) * (Random.value > 0.5f ? 1 : -1);
@@ -106,16 +149,13 @@ public class JuegoTablero : MonoBehaviour
             yield return null;
         }
 
-        // =========================================================================
-        // 4. FRENADO Y ALINEACIÓN SUAVE A LA CARA FINAL (SLERP)
-        // =========================================================================
         if (dadoActual != null)
         {
             Quaternion rotacionIncomoda = dadoActual.transform.localRotation;
             Quaternion rotacionDestino = Quaternion.Euler(rotacionesCaras[resultadoDado - 1]);
 
             float tiempoFrenado = 0f;
-            float duracionFrenado = 0.4f; // Qué tan rápido se alinea
+            float duracionFrenado = 0.4f;
 
             while (tiempoFrenado < 1f)
             {
@@ -123,19 +163,14 @@ public class JuegoTablero : MonoBehaviour
                 dadoActual.transform.localRotation = Quaternion.Slerp(rotacionIncomoda, rotacionDestino, tiempoFrenado);
                 yield return null;
             }
-            dadoActual.transform.localRotation = rotacionDestino; // Asegurar posición exacta
+            dadoActual.transform.localRotation = rotacionDestino;
 
-            // =========================================================================
-            // NUEVO AJUSTE: EFECTO REBOTE (ESCALA)
-            // =========================================================================
-            // Capturamos la escala actual del dado, por si el modelo no tiene escala 1,1,1
             Vector3 escalaOriginal = dadoActual.transform.localScale;
-            Vector3 escalaReducida = escalaOriginal * 0.5f; // Encoger a la mitad
+            Vector3 escalaReducida = escalaOriginal * 0.5f;
 
             float tiempoRebote = 0f;
-            float duracionMediaRebote = 0.15f; // Tardará 0.15s en encogerse, y 0.15s en agrandarse.
+            float duracionMediaRebote = 0.15f;
 
-            // Fase 1: Encogerse suavemente
             while (tiempoRebote < 1f)
             {
                 tiempoRebote += Time.deltaTime / duracionMediaRebote;
@@ -143,8 +178,7 @@ public class JuegoTablero : MonoBehaviour
                 yield return null;
             }
 
-            // Fase 2: Agrandarse de nuevo suavemente
-            tiempoRebote = 0f; // Reiniciamos el contador de tiempo
+            tiempoRebote = 0f;
             while (tiempoRebote < 1f)
             {
                 tiempoRebote += Time.deltaTime / duracionMediaRebote;
@@ -152,20 +186,15 @@ public class JuegoTablero : MonoBehaviour
                 yield return null;
             }
 
-            // Nos aseguramos de restaurar la escala exacta por si acaso
             dadoActual.transform.localScale = escalaOriginal;
-            // =========================================================================
         }
 
         Debug.Log($"🎲 ¡Salió un <b>{resultadoDado}</b>!");
 
-        // 5. Esperar un momento para que el jugador vea el resultado
         yield return new WaitForSeconds(tiempoEsperaResultado);
 
-        // 6. Ocultar el dado
         if (dadoActual != null) dadoActual.SetActive(false);
 
-        // 7. Calcular y ejecutar el movimiento de la ficha
         int casillaAnterior = casillasActuales[turnoActual];
         int nuevaCasilla = casillaAnterior + resultadoDado;
 
@@ -173,7 +202,6 @@ public class JuegoTablero : MonoBehaviour
 
         yield return StartCoroutine(MoverFichaPasoAPaso(turnoActual, casillaAnterior, nuevaCasilla));
 
-        // 8. Finalizar turno y cambiar al siguiente jugador
         if (casillasActuales[turnoActual] >= posiciones.Length - 1)
         {
             Debug.Log($"🏆 <b>¡EL JUGADOR {turnoActual + 1} HA GANADO!</b>");
@@ -215,7 +243,7 @@ public class JuegoTablero : MonoBehaviour
     {
         turnoActual = (turnoActual + 1) % jugadores.Length;
         ActualizarCamarasCinemachine();
-        Debug.Log($"👉 Turno del <b>Jugador {turnoActual + 1}</b>. ¡Presiona 'E' para tirar!");
+        Debug.Log($"👉 Turno del <b>Jugador {turnoActual + 1}</b>. ¡Agita el dado físico para tirar!");
     }
 
     private void ActualizarCamarasCinemachine()
