@@ -55,15 +55,6 @@ public class DadoController : MonoBehaviour
                 if (fuerzaMovimiento.magnitude > sensibilidadAgitacion)
                 {
                     Debug.Log("¡DADO AGITADO!");
-
-                    // 1. Le enviamos la 'V' al Arduino para que el buzzer haga el sonido de cascabeleo
-                    if (puerto != null && puerto.IsOpen)
-                    {
-                        puerto.Write("V");
-                    }
-
-                    // 2. Llamamos al script del juego para que lance el dado
-                    FindObjectOfType<JuegoTablero>().LanzarDadoFisico();
                 }
             }
             catch (TimeoutException) { }
