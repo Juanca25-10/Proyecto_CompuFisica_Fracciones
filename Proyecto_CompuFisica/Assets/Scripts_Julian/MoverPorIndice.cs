@@ -8,9 +8,13 @@ public class JuegoTablero : MonoBehaviour
     [Header("Jugadores")]
     public GameObject[] jugadores;
 
+    [Header("Animadores de los Jugadores")]
+    [Tooltip("Se auto-detectan desde los jugadores si se deja vacío")]
+    public Animator[] animadoresJugadores;
+
     [Header("Cámaras Virtuales de Cinemachine")]
     public GameObject[] camarasVirtuales;
-    public GameObject camaraGlobalTablero; // <- NUEVO: Para la vista panorámica
+    public GameObject camaraGlobalTablero; // Para la vista panorámica
 
     [Header("Dados 3D de los Jugadores")]
     public GameObject[] dadosJugadores;
@@ -18,6 +22,9 @@ public class JuegoTablero : MonoBehaviour
     [Header("Configuración del Dado")]
     public float tiempoGiroDado = 1.5f;
     public float tiempoEsperaResultado = 1f;
+
+    [Tooltip("Ajuste vertical sobre las casillas. Negativo si el personaje flota, positivo si se hunde.")]
+    public float offsetYPersonaje = 0f;
 
     [Tooltip("Rotaciones (Euler) para que cada cara (1 a 6) mire directamente a la cámara.")]
     public Vector3[] rotacionesCaras = new Vector3[6]
@@ -37,10 +44,24 @@ public class JuegoTablero : MonoBehaviour
     public float velocidadMovimiento = 4f;
     public float alturaSalto = 1.2f;
 
+    [Header("Configuración de Animación del Personaje")]
+    [Range(0f, 1f)]
+    [Tooltip("Probabilidad de que el personaje SALTE en vez de CORRER al pasar cada casilla (0 = nunca, 1 = siempre)")]
+    public float probabilidadSalto = 0.3f;
+
+    [Tooltip("Qué tan rápido rota el personaje para mirar hacia donde camina")]
+    public float velocidadRotacion = 15f;
+
+    private const string PARAM_BLEND = "Blend";
+    private const string PARAM_SALTAR = "Saltar";
+
     private int[] casillasActuales;
     private int turnoActual = 0;
     private bool juegoTerminado = false;
     private bool estaProcesandoTurno = false;
+
+    private Vector3[] posicionesDeseadas;
+    private bool[] estaMoviendose;
 
     private void Awake()
     {
@@ -49,11 +70,58 @@ public class JuegoTablero : MonoBehaviour
         if (jugadores != null && jugadores.Length > 0)
         {
             casillasActuales = new int[jugadores.Length];
+            posicionesDeseadas = new Vector3[jugadores.Length];
+            estaMoviendose = new bool[jugadores.Length];
+
+            if (animadoresJugadores == null || animadoresJugadores.Length == 0)
+            {
+                animadoresJugadores = new Animator[jugadores.Length];
+                for (int i = 0; i < jugadores.Length; i++)
+                    if (jugadores[i] != null)
+                        animadoresJugadores[i] = jugadores[i].GetComponentInChildren<Animator>();
+            }
         }
+
+        if (animadoresJugadores != null)
+            foreach (Animator anim in animadoresJugadores)
+                if (anim != null) anim.applyRootMotion = false;
 
         ActualizarCamarasCinemachine();
         OcultarTodosLosDados();
+
+        // HEAD: apagar cámara global al iniciar
         if (camaraGlobalTablero != null) camaraGlobalTablero.SetActive(false);
+
+        // Puentes_CF: poner todos los personajes en Idle al iniciar
+        PonerTodosEnIdle();
+    }
+
+    private void Start()
+    {
+        if (posiciones == null || posiciones.Length == 0 || jugadores == null) return;
+
+        float alturaTablero = posiciones[0].position.y + offsetYPersonaje;
+
+        for (int i = 0; i < jugadores.Length; i++)
+        {
+            if (jugadores[i] != null)
+            {
+                Vector3 pos = jugadores[i].transform.position;
+                pos.y = alturaTablero;
+                jugadores[i].transform.position = pos;
+            }
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (jugadores == null || posicionesDeseadas == null) return;
+
+        for (int i = 0; i < jugadores.Length; i++)
+        {
+            if (estaMoviendose[i] && jugadores[i] != null)
+                jugadores[i].transform.position = posicionesDeseadas[i];
+        }
     }
 
     private void BuscarPosicionesAutomaticamente()
@@ -71,7 +139,7 @@ public class JuegoTablero : MonoBehaviour
         posiciones = listaTemporal.ToArray();
     }
 
-    // Mantiene compatibilidad con el teclado de tu amigo
+    // Compatibilidad con teclado
     public void TurnoAvanzar(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
@@ -79,10 +147,10 @@ public class JuegoTablero : MonoBehaviour
     }
 
     // =========================================================================
-    // NUEVAS FUNCIONES PARA TU CONTROL ARDUINO
+    // FUNCIONES PARA CONTROL ARDUINO
     // =========================================================================
 
-    // Al agitar el cubo, llamaremos a esta función
+    // Al agitar el cubo físico
     public void LanzarDadoFisico()
     {
         if (juegoTerminado || estaProcesandoTurno) return;
@@ -103,7 +171,7 @@ public class JuegoTablero : MonoBehaviour
         float t = 0;
         while (t < 1f)
         {
-            t += Time.deltaTime * 4f; // Salto rápido y divertido
+            t += Time.deltaTime * 4f;
             Vector3 posActual = posOriginal;
             posActual.y += Mathf.Sin(t * Mathf.PI) * 0.8f;
             ficha.transform.position = posActual;
@@ -116,11 +184,9 @@ public class JuegoTablero : MonoBehaviour
     public void AlternarCamaraGlobal()
     {
         if (camaraGlobalTablero == null) return;
-
-        // El signo '!' significa "lo contrario". 
-        // Si está activa se apaga, si está apagada se enciende.
         camaraGlobalTablero.SetActive(!camaraGlobalTablero.activeSelf);
     }
+
     // =========================================================================
 
     private IEnumerator SecuenciaTurnoCompleta()
@@ -137,6 +203,7 @@ public class JuegoTablero : MonoBehaviour
         float velocidadY = Random.Range(600f, 1200f) * (Random.value > 0.5f ? 1 : -1);
         float velocidadZ = Random.Range(600f, 1200f) * (Random.value > 0.5f ? 1 : -1);
 
+        // 1. Girar el dado
         float tiempoTranscurrido = 0f;
         while (tiempoTranscurrido < tiempoGiroDado)
         {
@@ -149,6 +216,7 @@ public class JuegoTablero : MonoBehaviour
             yield return null;
         }
 
+        // 2. Frenado y alineación a la cara final
         if (dadoActual != null)
         {
             Quaternion rotacionIncomoda = dadoActual.transform.localRotation;
@@ -165,43 +233,47 @@ public class JuegoTablero : MonoBehaviour
             }
             dadoActual.transform.localRotation = rotacionDestino;
 
+            // Rebote de escala
             Vector3 escalaOriginal = dadoActual.transform.localScale;
             Vector3 escalaReducida = escalaOriginal * 0.5f;
-
             float tiempoRebote = 0f;
-            float duracionMediaRebote = 0.15f;
+            float duracionRebote = 0.15f;
 
             while (tiempoRebote < 1f)
             {
-                tiempoRebote += Time.deltaTime / duracionMediaRebote;
+                tiempoRebote += Time.deltaTime / duracionRebote;
                 dadoActual.transform.localScale = Vector3.Lerp(escalaOriginal, escalaReducida, tiempoRebote);
                 yield return null;
             }
-
             tiempoRebote = 0f;
             while (tiempoRebote < 1f)
             {
-                tiempoRebote += Time.deltaTime / duracionMediaRebote;
+                tiempoRebote += Time.deltaTime / duracionRebote;
                 dadoActual.transform.localScale = Vector3.Lerp(escalaReducida, escalaOriginal, tiempoRebote);
                 yield return null;
             }
-
             dadoActual.transform.localScale = escalaOriginal;
         }
 
         Debug.Log($"🎲 ¡Salió un <b>{resultadoDado}</b>!");
 
+        // 3. Pausa para que el jugador vea el resultado
         yield return new WaitForSeconds(tiempoEsperaResultado);
 
+        // 4. Ocultar dado
         if (dadoActual != null) dadoActual.SetActive(false);
 
+        // 5. Mover la ficha animada
         int casillaAnterior = casillasActuales[turnoActual];
         int nuevaCasilla = casillaAnterior + resultadoDado;
-
         if (nuevaCasilla >= posiciones.Length) nuevaCasilla = posiciones.Length - 1;
 
         yield return StartCoroutine(MoverFichaPasoAPaso(turnoActual, casillaAnterior, nuevaCasilla));
 
+        // 6. Volver a Idle al terminar el recorrido
+        SetBlend(turnoActual, 0f);
+
+        // 7. Comprobar victoria o cambiar turno
         if (casillasActuales[turnoActual] >= posiciones.Length - 1)
         {
             Debug.Log($"🏆 <b>¡EL JUGADOR {turnoActual + 1} HA GANADO!</b>");
@@ -218,25 +290,71 @@ public class JuegoTablero : MonoBehaviour
     private IEnumerator MoverFichaPasoAPaso(int jugadorIndice, int desdeCasilla, int hastaCasilla)
     {
         GameObject ficha = jugadores[jugadorIndice];
+        estaMoviendose[jugadorIndice] = true;
 
         for (int c = desdeCasilla + 1; c <= hastaCasilla; c++)
         {
             Vector3 posInicio = ficha.transform.position;
             Vector3 posFin = posiciones[c].position;
-            float t = 0;
+            posFin.y += offsetYPersonaje;
+
+            Vector3 direccion = posiciones[c].position - posInicio;
+            direccion.y = 0f;
+
+            bool esSalto = Random.value < probabilidadSalto;
+            if (esSalto) SetTrigger(jugadorIndice, PARAM_SALTAR);
+            else SetBlend(jugadorIndice, 1f);
+
+            float t = 0f;
 
             while (t < 1f)
             {
-                t += Time.deltaTime * velocidadMovimiento;
-                Vector3 posActual = Vector3.Lerp(posInicio, posFin, t);
-                posActual.y += Mathf.Sin(t * Mathf.PI) * alturaSalto;
-                ficha.transform.position = posActual;
+                t = Mathf.Clamp01(t + Time.deltaTime * velocidadMovimiento);
+
+                posicionesDeseadas[jugadorIndice] = Vector3.Lerp(posInicio, posFin, t);
+
+                if (direccion.sqrMagnitude > 0.001f)
+                {
+                    Quaternion rotObjetivo = Quaternion.LookRotation(direccion);
+                    ficha.transform.rotation = Quaternion.Slerp(
+                        ficha.transform.rotation, rotObjetivo,
+                        Time.deltaTime * velocidadRotacion);
+                }
+
                 yield return null;
             }
 
+            posicionesDeseadas[jugadorIndice] = posFin;
             ficha.transform.position = posFin;
             casillasActuales[jugadorIndice] = c;
         }
+
+        estaMoviendose[jugadorIndice] = false;
+    }
+
+    private void SetBlend(int jugadorIndice, float valor)
+    {
+        Animator anim = ObtenerAnimador(jugadorIndice);
+        if (anim != null) anim.SetFloat(PARAM_BLEND, valor);
+    }
+
+    private void SetTrigger(int jugadorIndice, string trigger)
+    {
+        Animator anim = ObtenerAnimador(jugadorIndice);
+        if (anim != null) anim.SetTrigger(trigger);
+    }
+
+    private Animator ObtenerAnimador(int indice)
+    {
+        if (animadoresJugadores == null || indice >= animadoresJugadores.Length) return null;
+        return animadoresJugadores[indice];
+    }
+
+    private void PonerTodosEnIdle()
+    {
+        if (animadoresJugadores == null) return;
+        for (int i = 0; i < animadoresJugadores.Length; i++)
+            SetBlend(i, 0f);
     }
 
     private void CambiarTurno()
@@ -251,7 +369,8 @@ public class JuegoTablero : MonoBehaviour
         if (camarasVirtuales == null || camarasVirtuales.Length == 0) return;
         for (int i = 0; i < camarasVirtuales.Length; i++)
         {
-            if (camarasVirtuales[i] != null) camarasVirtuales[i].SetActive(i == turnoActual);
+            if (camarasVirtuales[i] != null)
+                camarasVirtuales[i].SetActive(i == turnoActual);
         }
     }
 
@@ -259,8 +378,6 @@ public class JuegoTablero : MonoBehaviour
     {
         if (dadosJugadores == null) return;
         foreach (GameObject dado in dadosJugadores)
-        {
             if (dado != null) dado.SetActive(false);
-        }
     }
 }
