@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class JuegoTablero : MonoBehaviour
 {
+//SAPA
     [Header("Jugadores")]
     public GameObject[] jugadores;
 
