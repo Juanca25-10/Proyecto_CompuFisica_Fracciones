@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Windows
+  m_Name: RoofTiles_Red 7
   m_Shader: {fileID: -6465566751694194690, guid: 0dcad93cfb940244dbe16da97e0c9340, type: 3}
-  m_Parent: {fileID: 2100000, guid: cea12ac6b05d00947964cb65bdbebdae, type: 2}
+  m_Parent: {fileID: 2100000, guid: 8f948bde3fe97c64e9a2a17051ea6158, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -25,13 +25,16 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _Max: 3.76
+    - _Min: 0.26
+    - _Shades: 0.03
     m_Colors:
-    - _BaseColor: {r: 0.20665419, g: 0.20665419, b: 0.20665419, a: 1}
-    - _Color: {r: 0.20665416, g: 0.20665416, b: 0.20665416, a: 1}
+    - _BaseColor: {r: 0.4199866, g: 0.17835546, b: 0.12998286, a: 1}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &3047132327103528330
+--- !u!114 &4287574696075167175
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
