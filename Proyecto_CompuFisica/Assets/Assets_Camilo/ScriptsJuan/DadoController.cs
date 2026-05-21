@@ -5,23 +5,35 @@ using UnityEngine.Events;
 
 public class DadoController : MonoBehaviour
 {
-    SerialPort puerto = new SerialPort("COM11", 9600); // Recuerda verificar tu COM
+    [Header("Configuración del Puerto")]
+    // Cambia "COM3" por el puerto real de tu Arduino en Windows
+    public string puertoCOM = "COM11";
+    private SerialPort puerto;
+
+    [Header("Acelerómetro")]
     public float sensibilidadAgitacion = 25000f;
 
     [Header("Eventos de los 4 Botones")]
-    // Ahora el Inspector mostrará solo 4 espacios
     public UnityEvent[] alPresionarBoton = new UnityEvent[4];
     private bool[] estadoAnterior = new bool[4];
 
     void Start()
     {
+        puerto = new SerialPort(puertoCOM, 9600);
         puerto.ReadTimeout = 20;
-        puerto.Open();
+        try
+        {
+            puerto.Open();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("No se pudo abrir el puerto: " + e.Message);
+        }
     }
 
     void Update()
     {
-        if (puerto.IsOpen && puerto.BytesToRead > 0)
+        if (puerto != null && puerto.IsOpen && puerto.BytesToRead > 0)
         {
             try
             {
@@ -32,20 +44,20 @@ public class DadoController : MonoBehaviour
                 string[] botones = partes[0].Split(',');
                 string[] aceleracion = partes[1].Split(',');
 
-                // Leer solo los 4 botones
+                // Leer botones
                 for (int i = 0; i < 4; i++)
                 {
                     bool presionadoAhora = (botones[i] == "1");
 
                     if (presionadoAhora && !estadoAnterior[i])
                     {
-                        Debug.Log("Clic en botón índice: " + i);
+                        Debug.Log("Clic físico en botón índice: " + i);
                         alPresionarBoton[i].Invoke();
                     }
                     estadoAnterior[i] = presionadoAhora;
                 }
 
-                // Leer agitación
+                // Leer agitación del MPU
                 float acX = float.Parse(aceleracion[0]);
                 float acY = float.Parse(aceleracion[1]);
                 float acZ = float.Parse(aceleracion[2]);
@@ -54,7 +66,12 @@ public class DadoController : MonoBehaviour
 
                 if (fuerzaMovimiento.magnitude > sensibilidadAgitacion)
                 {
-                    Debug.Log("¡DADO AGITADO!");
+                    // Enviar sonido de vibración al Arduino
+                    puerto.Write("V");
+
+                    // Ordenar al tablero lanzar el dado
+                    JuegoTablero juego = FindObjectOfType<JuegoTablero>();
+                    if (juego != null) juego.LanzarDadoFisico();
                 }
             }
             catch (TimeoutException) { }
