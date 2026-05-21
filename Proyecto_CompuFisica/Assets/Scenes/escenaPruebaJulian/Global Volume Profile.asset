@@ -131,6 +131,34 @@ MonoBehaviour:
   saturation:
     m_OverrideState: 1
     m_Value: 3
+--- !u!114 &-1474146255237399543
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5e1dc532bcb41949b58bc4f2abfbb7e, type: 3}
+  m_Name: LensDistortion
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.LensDistortion
+  active: 1
+  intensity:
+    m_OverrideState: 0
+    m_Value: 0
+  xMultiplier:
+    m_OverrideState: 0
+    m_Value: 1
+  yMultiplier:
+    m_OverrideState: 0
+    m_Value: 1
+  center:
+    m_OverrideState: 0
+    m_Value: {x: 0.5, y: 0.5}
+  scale:
+    m_OverrideState: 0
+    m_Value: 1
 --- !u!114 &-1326580324076847045
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -177,6 +205,7 @@ MonoBehaviour:
   - {fileID: -7330570806690675217}
   - {fileID: -1326580324076847045}
   - {fileID: 5032604664813058225}
+  - {fileID: -1474146255237399543}
 --- !u!114 &786202304553276362
 MonoBehaviour:
   m_ObjectHideFlags: 3

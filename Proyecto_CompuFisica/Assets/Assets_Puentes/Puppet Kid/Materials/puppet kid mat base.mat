@@ -104,10 +104,10 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _StrokeBlendingNoiseScale: 500
-    - _StrokeBlendingNoiseStrength: 0.15
-    - _StrokeRandomness: 1
-    - _StrokeScale: 5
+    - _StrokeBlendingNoiseScale: 1
+    - _StrokeBlendingNoiseStrength: 0
+    - _StrokeRandomness: 0
+    - _StrokeScale: 1
     - _UVSec: 0
     - _UseBlendingNoise: 1
     - _Variation: 0.1
@@ -116,7 +116,7 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _VariationColorA: {r: 0, g: 0, b: 0, a: 0}
+    - _VariationColorA: {r: 0.3679245, g: 0.3679245, b: 0.3679245, a: 0}
     - _VariationColorB: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
