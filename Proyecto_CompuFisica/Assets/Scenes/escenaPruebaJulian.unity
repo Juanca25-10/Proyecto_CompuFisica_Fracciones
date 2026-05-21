@@ -13860,6 +13860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1681856ea4f54dc48a2720760d36750b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DadoController
+  puertoCOM: COM11
   sensibilidadAgitacion: 25000
   alPresionarBoton:
   - m_PersistentCalls:
@@ -13926,7 +13927,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1973965399}
         m_TargetAssemblyTypeName: JuegoTablero, Assembly-CSharp
         m_MethodName: AlternarCamaraGlobal
         m_Mode: 1
@@ -13964,7 +13965,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1973965399}
         m_TargetAssemblyTypeName: JuegoTablero, Assembly-CSharp
         m_MethodName: LanzarDadoFisico
         m_Mode: 1
@@ -14002,7 +14003,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1973965399}
         m_TargetAssemblyTypeName: JuegoTablero, Assembly-CSharp
         m_MethodName: CelebrarJugador
         m_Mode: 1
@@ -15953,7 +15954,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 814821307}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1476107746}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -18664,7 +18665,7 @@ Transform:
   m_GameObject: {fileID: 1002651288}
   serializedVersion: 2
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 11.21, y: 10.000001, z: -12}
+  m_LocalPosition: {x: 9.888, y: 10.04, z: -11.51}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -26903,7 +26904,8 @@ Transform:
   m_LocalPosition: {x: 13.160491, y: -4.5345726, z: 10.150735}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 848143163}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1478036450
@@ -40395,7 +40397,6 @@ MonoBehaviour:
   jugadores:
   - {fileID: 2098959204}
   - {fileID: 1826831602}
-  animadoresJugadores: []
   camarasVirtuales:
   - {fileID: 642708538}
   - {fileID: 1066304484}
@@ -40405,7 +40406,6 @@ MonoBehaviour:
   - {fileID: 734670436}
   tiempoGiroDado: 1.5
   tiempoEsperaResultado: 1
-  offsetYPersonaje: -1
   rotacionesCaras:
   - {x: 35, y: 0, z: 0}
   - {x: -60, y: 0, z: 0}
@@ -40416,8 +40416,6 @@ MonoBehaviour:
   posiciones: []
   velocidadMovimiento: 4
   alturaSalto: 0
-  probabilidadSalto: 0
-  velocidadRotacion: 6
 --- !u!4 &1973965400
 Transform:
   m_ObjectHideFlags: 0
@@ -49065,5 +49063,4 @@ SceneRoots:
   - {fileID: 1787031406}
   - {fileID: 776969100}
   - {fileID: 849120970}
-  - {fileID: 848143163}
   - {fileID: 908256670}
