@@ -2,15 +2,50 @@
 using UnityEngine.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using TMPro;
 
 public class JuegoTablero : MonoBehaviour
 {
+    [System.Serializable]
+    public class DatosQuiz
+    {
+        [Tooltip("El número de casilla donde se activará esta pregunta")]
+        public int numeroCasilla;
+
+        [Header("Contenido del Contexto")]
+        [TextArea(3, 6)]
+        public string textoContexto;
+
+        [Header("Contenido de la Pregunta")]
+        [TextArea(2, 4)]
+        public string textoPregunta;
+
+        [Tooltip("Imagen opcional para ilustrar la pregunta en la UI")]
+        public Sprite imagenAcompañante;
+
+        [Header("Opciones de Respuesta (Libres)")]
+        [Tooltip("Arrastra aquí los 3 GameObjects que representan las opciones. [0] = Z, [1] = X, [2] = C.")]
+        public GameObject[] objetosOpciones = new GameObject[3];
+
+        [Tooltip("Opción correcta: 0 para Z, 1 para X, 2 para C")]
+        [Range(0, 2)] public int opcionCorrecta;
+    }
+
     [Header("Jugadores")]
     public GameObject[] jugadores;
+    public Animator[] animadoresJugadores;
 
-    [Header("Cámaras Virtuales de Cinemachine")]
-    public GameObject[] camarasVirtuales;
+    [Header("Cámaras Cinemachine Normales")]
+    public GameObject[] camarasVirtualesJugadores;
     public GameObject camaraGlobalTablero;
+
+    [Header("Cámaras Cinemachine de Quiz")]
+    [Tooltip("La cámara de primer plano dedicada al Quiz (1 por jugador)")]
+    public GameObject[] camarasQuizJugadores;
+
+    [Tooltip("Tiempo en segundos que tarda la cámara en hacer la transición (Blend)")]
+    public float tiempoTransicionCamara = 1f;
 
     [Header("Dados 3D de los Jugadores")]
     public GameObject[] dadosJugadores;
@@ -18,29 +53,49 @@ public class JuegoTablero : MonoBehaviour
     [Header("Configuración del Dado")]
     public float tiempoGiroDado = 1.5f;
     public float tiempoEsperaResultado = 1f;
+    public float offsetYPersonaje = 0f;
 
-    [Tooltip("Rotaciones para las caras 1 a 6.")]
+    [Tooltip("Rotaciones (Euler) para que cada cara mire a la cámara.")]
     public Vector3[] rotacionesCaras = new Vector3[6]
     {
-        new Vector3(0, 0, 0),
-        new Vector3(90, 0, 0),
-        new Vector3(0, 90, 0),
-        new Vector3(0, -90, 0),
-        new Vector3(-90, 0, 0),
-        new Vector3(180, 0, 0)
+        new Vector3(0, 0, 0), new Vector3(90, 0, 0), new Vector3(0, 90, 0),
+        new Vector3(0, -90, 0), new Vector3(-90, 0, 0), new Vector3(180, 0, 0)
     };
 
-    [Header("Posiciones")]
+    [Header("Posiciones (Se llenan solas)")]
     [SerializeField] private Transform[] posiciones;
-
-    [Header("Configuración del Movimiento Ficha")]
     public float velocidadMovimiento = 4f;
-    public float alturaSalto = 1.2f;
+    public float velocidadRotacion = 15f;
 
+    [Header("Configuración del Sistema de Quiz")]
+    public List<DatosQuiz> preguntasConfiguradas;
+
+    [Header("UI del Quiz (Screen Space)")]
+    public GameObject panelContextoUI;
+    public TMP_Text textoContextoUI;
+    public GameObject panelPreguntaUI;
+    public TMP_Text textoPreguntaUI;
+    public Image imagenPreguntaUI;
+    public GameObject[] resaltadosOpciones = new GameObject[3];
+
+    [Header("Retroalimentación Visual (Alertas UI)")]
+    [Tooltip("El panel/imagen que dice '¡Pregunta!' u '¡Ojo!' al caer en la casilla")]
+    public GameObject alertaLlegadaPregunta;
+    [Tooltip("El panel/imagen que dice '¡Correcto!'")]
+    public GameObject alertaRespuestaCorrecta;
+    [Tooltip("El panel/imagen que dice '¡Incorrecto!'")]
+    public GameObject alertaRespuestaIncorrecta;
+    [Tooltip("Cuánto tiempo en segundos dura la alerta en pantalla antes de avanzar")]
+    public float tiempoMostrarAlertas = 2f;
+
+    private const string PARAM_BLEND = "Blend";
     private int[] casillasActuales;
     private int turnoActual = 0;
     private bool juegoTerminado = false;
     private bool estaProcesandoTurno = false;
+
+    private Vector3[] posicionesDeseadas;
+    private bool[] estaMoviendose;
 
     private void Awake()
     {
@@ -49,11 +104,62 @@ public class JuegoTablero : MonoBehaviour
         if (jugadores != null && jugadores.Length > 0)
         {
             casillasActuales = new int[jugadores.Length];
+            posicionesDeseadas = new Vector3[jugadores.Length];
+            estaMoviendose = new bool[jugadores.Length];
+
+            if (animadoresJugadores == null || animadoresJugadores.Length == 0)
+            {
+                animadoresJugadores = new Animator[jugadores.Length];
+                for (int i = 0; i < jugadores.Length; i++)
+                    if (jugadores[i] != null)
+                        animadoresJugadores[i] = jugadores[i].GetComponentInChildren<Animator>();
+            }
         }
 
+        if (animadoresJugadores != null)
+            foreach (Animator anim in animadoresJugadores)
+                if (anim != null) anim.applyRootMotion = false;
+
+        ApagarTodasLasCamarasEspeciales();
         ActualizarCamarasCinemachine();
         OcultarTodosLosDados();
+
         if (camaraGlobalTablero != null) camaraGlobalTablero.SetActive(false);
+
+        // Ocultar todas las UI
+        if (panelContextoUI != null) panelContextoUI.SetActive(false);
+        if (panelPreguntaUI != null) panelPreguntaUI.SetActive(false);
+        if (alertaLlegadaPregunta != null) alertaLlegadaPregunta.SetActive(false);
+        if (alertaRespuestaCorrecta != null) alertaRespuestaCorrecta.SetActive(false);
+        if (alertaRespuestaIncorrecta != null) alertaRespuestaIncorrecta.SetActive(false);
+
+        OcultarTodasLasOpcionesConfiguradas();
+        PonerTodosEnIdle();
+    }
+
+    private void Start()
+    {
+        if (posiciones == null || posiciones.Length == 0 || jugadores == null) return;
+        float alturaTablero = posiciones[0].position.y + offsetYPersonaje;
+        for (int i = 0; i < jugadores.Length; i++)
+        {
+            if (jugadores[i] != null)
+            {
+                Vector3 pos = jugadores[i].transform.position;
+                pos.y = alturaTablero;
+                jugadores[i].transform.position = pos;
+            }
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (jugadores == null || posicionesDeseadas == null) return;
+        for (int i = 0; i < jugadores.Length; i++)
+        {
+            if (estaMoviendose[i] && jugadores[i] != null)
+                jugadores[i].transform.position = posicionesDeseadas[i];
+        }
     }
 
     private void BuscarPosicionesAutomaticamente()
@@ -61,7 +167,6 @@ public class JuegoTablero : MonoBehaviour
         List<Transform> listaTemporal = new List<Transform>();
         int i = 0;
         if (GameObject.Find("pos0") == null) i = 1;
-
         while (true)
         {
             GameObject go = GameObject.Find("pos" + i);
@@ -71,7 +176,6 @@ public class JuegoTablero : MonoBehaviour
         posiciones = listaTemporal.ToArray();
     }
 
-    // Compatibilidad por si usan teclado
     public void TurnoAvanzar(InputAction.CallbackContext context)
     {
         if (!context.performed) return;
@@ -84,41 +188,19 @@ public class JuegoTablero : MonoBehaviour
         StartCoroutine(SecuenciaTurnoCompleta());
     }
 
-    public void CelebrarJugador()
-    {
-        if (estaProcesandoTurno || juegoTerminado) return;
-        StartCoroutine(RutinaSaltoCelebracion());
-    }
-
-    private IEnumerator RutinaSaltoCelebracion()
-    {
-        GameObject ficha = jugadores[turnoActual];
-        Vector3 posOriginal = posiciones[casillasActuales[turnoActual]].position;
-        float t = 0;
-        while (t < 1f)
-        {
-            t += Time.deltaTime * 4f;
-            Vector3 posActual = posOriginal;
-            posActual.y += Mathf.Sin(t * Mathf.PI) * 0.8f;
-            ficha.transform.position = posActual;
-            yield return null;
-        }
-        ficha.transform.position = posOriginal;
-    }
-
-    public void AlternarCamaraGlobal()
-    {
-        if (camaraGlobalTablero == null) return;
-        camaraGlobalTablero.SetActive(!camaraGlobalTablero.activeSelf);
-    }
+    // =========================================================================
+    // FLUJO PRINCIPAL DEL TURNO
+    // =========================================================================
 
     private IEnumerator SecuenciaTurnoCompleta()
     {
         estaProcesandoTurno = true;
+
         GameObject dadoActual = dadosJugadores[turnoActual];
         if (dadoActual != null) dadoActual.SetActive(true);
 
         int resultadoDado = Random.Range(1, 7);
+        Debug.Log($"🎲 Jugador {turnoActual + 1} está lanzando el dado...");
 
         float velocidadX = Random.Range(600f, 1200f) * (Random.value > 0.5f ? 1 : -1);
         float velocidadY = Random.Range(600f, 1200f) * (Random.value > 0.5f ? 1 : -1);
@@ -148,7 +230,14 @@ public class JuegoTablero : MonoBehaviour
                 yield return null;
             }
             dadoActual.transform.localRotation = rotacionDestino;
-            yield return new WaitForSeconds(0.3f);
+
+            Vector3 escalaOriginal = dadoActual.transform.localScale;
+            Vector3 escalaReducida = escalaOriginal * 0.5f;
+            float tiempoRebote = 0f;
+            while (tiempoRebote < 1f) { tiempoRebote += Time.deltaTime / 0.15f; dadoActual.transform.localScale = Vector3.Lerp(escalaOriginal, escalaReducida, tiempoRebote); yield return null; }
+            tiempoRebote = 0f;
+            while (tiempoRebote < 1f) { tiempoRebote += Time.deltaTime / 0.15f; dadoActual.transform.localScale = Vector3.Lerp(escalaReducida, escalaOriginal, tiempoRebote); yield return null; }
+            dadoActual.transform.localScale = escalaOriginal;
         }
 
         yield return new WaitForSeconds(tiempoEsperaResultado);
@@ -156,64 +245,263 @@ public class JuegoTablero : MonoBehaviour
 
         int casillaAnterior = casillasActuales[turnoActual];
         int nuevaCasilla = casillaAnterior + resultadoDado;
-
         if (nuevaCasilla >= posiciones.Length) nuevaCasilla = posiciones.Length - 1;
 
         yield return StartCoroutine(MoverFichaPasoAPaso(turnoActual, casillaAnterior, nuevaCasilla));
 
+        // --- SISTEMA DE QUIZ CON NUEVAS CÁMARAS Y ALERTAS ---
+        DatosQuiz quizDeEstaCasilla = ObtenerQuizDeCasillaActual(casillasActuales[turnoActual]);
+        if (quizDeEstaCasilla != null)
+        {
+            yield return StartCoroutine(ManejarSecuenciaQuizCinematico(quizDeEstaCasilla));
+        }
+
         if (casillasActuales[turnoActual] >= posiciones.Length - 1)
         {
+            Debug.Log($"🏆 ¡EL JUGADOR {turnoActual + 1} HA GANADO!");
             juegoTerminado = true;
         }
         else
         {
             CambiarTurno();
         }
+
         estaProcesandoTurno = false;
     }
 
     private IEnumerator MoverFichaPasoAPaso(int jugadorIndice, int desdeCasilla, int hastaCasilla)
     {
+        if (desdeCasilla == hastaCasilla) yield break;
+
         GameObject ficha = jugadores[jugadorIndice];
+        estaMoviendose[jugadorIndice] = true;
+        SetBlend(jugadorIndice, 1f);
+
         for (int c = desdeCasilla + 1; c <= hastaCasilla; c++)
         {
-            Vector3 posInicio = ficha.transform.position;
-            Vector3 posFin = posiciones[c].position;
-            float t = 0;
+            Vector3 posInicio = posiciones[c - 1].position; posInicio.y += offsetYPersonaje;
+            Vector3 posFin = posiciones[c].position; posFin.y += offsetYPersonaje;
+            Vector3 direccion = posFin - posInicio; direccion.y = 0f;
+
+            float t = 0f;
             while (t < 1f)
             {
-                t += Time.deltaTime * velocidadMovimiento;
+                t = Mathf.Clamp01(t + Time.deltaTime * velocidadMovimiento);
                 Vector3 posActual = Vector3.Lerp(posInicio, posFin, t);
-                posActual.y += Mathf.Sin(t * Mathf.PI) * alturaSalto;
-                ficha.transform.position = posActual;
+                posicionesDeseadas[jugadorIndice] = posActual;
+
+                if (direccion.sqrMagnitude > 0.001f)
+                {
+                    Quaternion rotObjetivo = Quaternion.LookRotation(direccion);
+                    ficha.transform.rotation = Quaternion.Slerp(ficha.transform.rotation, rotObjetivo, Time.deltaTime * velocidadRotacion);
+                }
                 yield return null;
             }
+            posicionesDeseadas[jugadorIndice] = posFin;
             ficha.transform.position = posFin;
             casillasActuales[jugadorIndice] = c;
         }
+
+        SetBlend(jugadorIndice, 0f);
+        estaMoviendose[jugadorIndice] = false;
+    }
+
+    // =========================================================================
+    // LÓGICA DEL QUIZ
+    // =========================================================================
+
+    private void OcultarTodasLasOpcionesConfiguradas()
+    {
+        if (preguntasConfiguradas == null) return;
+        foreach (var quiz in preguntasConfiguradas)
+        {
+            if (quiz.objetosOpciones != null)
+            {
+                foreach (var obj in quiz.objetosOpciones)
+                {
+                    if (obj != null) obj.SetActive(false);
+                }
+            }
+        }
+    }
+
+    private DatosQuiz ObtenerQuizDeCasillaActual(int numeroCasilla)
+    {
+        if (preguntasConfiguradas == null) return null;
+        return preguntasConfiguradas.Find(q => q.numeroCasilla == numeroCasilla);
+    }
+
+    private IEnumerator ManejarSecuenciaQuizCinematico(DatosQuiz quiz)
+    {
+        // 1. Mostrar Alerta de Entrada JUSTO al caer (Aún usando la cámara normal)
+        yield return StartCoroutine(MostrarAlertaTemporal(alertaLlegadaPregunta));
+
+        // 2. Cambiar a Cámara de Quiz (Primer plano)
+        if (camarasVirtualesJugadores.Length > turnoActual && camarasVirtualesJugadores[turnoActual] != null)
+            camarasVirtualesJugadores[turnoActual].SetActive(false);
+
+        if (camarasQuizJugadores.Length > turnoActual && camarasQuizJugadores[turnoActual] != null)
+            camarasQuizJugadores[turnoActual].SetActive(true);
+
+        // Esperar a que la cámara termine su transición suave
+        yield return new WaitForSeconds(2);
+
+        // 3. Mostrar UI de Contexto
+        if (panelContextoUI != null)
+        {
+            if (textoContextoUI != null) textoContextoUI.text = quiz.textoContexto;
+            panelContextoUI.SetActive(true);
+        }
+
+        // Esperar Enter
+        yield return new WaitUntil(() => Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame);
+        if (panelContextoUI != null) panelContextoUI.SetActive(false);
+        yield return new WaitForSeconds(0.2f); // Respiro
+
+        // 4. Mostrar UI de Pregunta y Activar opciones
+        if (panelPreguntaUI != null)
+        {
+            if (textoPreguntaUI != null) textoPreguntaUI.text = quiz.textoPregunta;
+            if (imagenPreguntaUI != null) imagenPreguntaUI.sprite = quiz.imagenAcompañante;
+            panelPreguntaUI.SetActive(true);
+        }
+
+        if (quiz.objetosOpciones != null)
+        {
+            for (int i = 0; i < 3; i++)
+                if (quiz.objetosOpciones.Length > i && quiz.objetosOpciones[i] != null)
+                    quiz.objetosOpciones[i].SetActive(true);
+        }
+
+        int opcionSeleccionada = -1;
+        ActualizarResaltadosUI(opcionSeleccionada);
+        bool respuestaConfirmada = false;
+
+        // Bucle de selección
+        while (!respuestaConfirmada)
+        {
+            if (Keyboard.current != null)
+            {
+                if (Keyboard.current.zKey.wasPressedThisFrame) { opcionSeleccionada = 0; ActualizarResaltadosUI(opcionSeleccionada); }
+                if (Keyboard.current.xKey.wasPressedThisFrame) { opcionSeleccionada = 1; ActualizarResaltadosUI(opcionSeleccionada); }
+                if (Keyboard.current.cKey.wasPressedThisFrame) { opcionSeleccionada = 2; ActualizarResaltadosUI(opcionSeleccionada); }
+
+                if (Keyboard.current.enterKey.wasPressedThisFrame && opcionSeleccionada != -1)
+                {
+                    respuestaConfirmada = true;
+                }
+            }
+            yield return null;
+        }
+
+        // Limpiar pantalla de opciones
+        if (panelPreguntaUI != null) panelPreguntaUI.SetActive(false);
+        if (quiz.objetosOpciones != null)
+        {
+            for (int i = 0; i < 3; i++)
+                if (quiz.objetosOpciones.Length > i && quiz.objetosOpciones[i] != null)
+                    quiz.objetosOpciones[i].SetActive(false);
+        }
+        ActualizarResaltadosUI(-1);
+
+        // 5. Evaluar respuesta y mostrar Alerta Visual (Aún en la cámara de Quiz)
+        bool respondioBien = (opcionSeleccionada == quiz.opcionCorrecta);
+
+        if (respondioBien)
+        {
+            yield return StartCoroutine(MostrarAlertaTemporal(alertaRespuestaCorrecta));
+        }
+        else
+        {
+            yield return StartCoroutine(MostrarAlertaTemporal(alertaRespuestaIncorrecta));
+        }
+
+        // 6. Volver a la cámara normal del jugador ANTES de moverse
+        if (camarasQuizJugadores.Length > turnoActual && camarasQuizJugadores[turnoActual] != null)
+            camarasQuizJugadores[turnoActual].SetActive(false);
+
+        if (camarasVirtualesJugadores.Length > turnoActual && camarasVirtualesJugadores[turnoActual] != null)
+            camarasVirtualesJugadores[turnoActual].SetActive(true);
+
+        // Esperar a que la cámara normal regrese por completo
+        yield return new WaitForSeconds(tiempoTransicionCamara);
+
+        // 7. Si acertó, mover al personaje (ahora la cámara normal lo verá correr)
+        if (respondioBien)
+        {
+            int casillaActual = casillasActuales[turnoActual];
+            int casillaDestinoExtra = casillaActual + 3;
+            if (casillaDestinoExtra >= posiciones.Length) casillaDestinoExtra = posiciones.Length - 1;
+
+            yield return StartCoroutine(MoverFichaPasoAPaso(turnoActual, casillaActual, casillaDestinoExtra));
+        }
+    }
+
+    private IEnumerator MostrarAlertaTemporal(GameObject panelAlerta)
+    {
+        if (panelAlerta != null)
+        {
+            panelAlerta.SetActive(true);
+            yield return new WaitForSeconds(tiempoMostrarAlertas);
+            panelAlerta.SetActive(false);
+        }
+    }
+
+    private void ActualizarResaltadosUI(int indiceSeleccionado)
+    {
+        if (resaltadosOpciones == null || resaltadosOpciones.Length < 3) return;
+        for (int i = 0; i < 3; i++)
+            if (resaltadosOpciones[i] != null)
+                resaltadosOpciones[i].SetActive(i == indiceSeleccionado);
+    }
+
+    // =========================================================================
+
+    private void SetBlend(int jugadorIndice, float valor)
+    {
+        Animator anim = ObtenerAnimador(jugadorIndice);
+        if (anim != null) anim.SetFloat(PARAM_BLEND, valor);
+    }
+
+    private Animator ObtenerAnimador(int indice)
+    {
+        if (animadoresJugadores == null || indice >= animadoresJugadores.Length) return null;
+        return animadoresJugadores[indice];
+    }
+
+    private void PonerTodosEnIdle()
+    {
+        if (animadoresJugadores == null) return;
+        for (int i = 0; i < animadoresJugadores.Length; i++)
+            SetBlend(i, 0f);
     }
 
     private void CambiarTurno()
     {
         turnoActual = (turnoActual + 1) % jugadores.Length;
+        ApagarTodasLasCamarasEspeciales();
         ActualizarCamarasCinemachine();
+    }
+
+    private void ApagarTodasLasCamarasEspeciales()
+    {
+        if (camarasQuizJugadores != null)
+            foreach (var cam in camarasQuizJugadores) if (cam != null) cam.SetActive(false);
     }
 
     private void ActualizarCamarasCinemachine()
     {
-        if (camarasVirtuales == null || camarasVirtuales.Length == 0) return;
-        for (int i = 0; i < camarasVirtuales.Length; i++)
-        {
-            if (camarasVirtuales[i] != null) camarasVirtuales[i].SetActive(i == turnoActual);
-        }
+        if (camarasVirtualesJugadores == null || camarasVirtualesJugadores.Length == 0) return;
+
+        for (int i = 0; i < camarasVirtualesJugadores.Length; i++)
+            if (camarasVirtualesJugadores[i] != null)
+                camarasVirtualesJugadores[i].SetActive(i == turnoActual);
     }
 
     private void OcultarTodosLosDados()
     {
         if (dadosJugadores == null) return;
         foreach (GameObject dado in dadosJugadores)
-        {
             if (dado != null) dado.SetActive(false);
-        }
     }
 }
