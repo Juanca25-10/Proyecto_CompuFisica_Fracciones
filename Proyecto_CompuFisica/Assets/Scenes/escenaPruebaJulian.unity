@@ -1147,7 +1147,7 @@ Transform:
   m_LocalScale: {x: 0.6666667, y: 0.6666667, z: 0.6666667}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2098959206}
+  m_Father: {fileID: 9212053721221426655}
   m_LocalEulerAnglesHint: {x: 0, y: 191.117, z: 0}
 --- !u!114 &43467115
 MonoBehaviour:
@@ -1186,7 +1186,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 2098959206}
+    TrackingTarget: {fileID: 9212053721221426655}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -1373,6 +1373,82 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6050794363772802145, guid: 5fe99a1fac0a3004cafced165f34aba2, type: 3}
   m_PrefabInstance: {fileID: 46940152}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &47043012
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 47043013}
+  - component: {fileID: 47043015}
+  - component: {fileID: 47043014}
+  m_Layer: 5
+  m_Name: puntosJ2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &47043013
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47043012}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1977860224}
+  m_Father: {fileID: 888435834}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -300, y: -428.42517}
+  m_SizeDelta: {x: 467.9434, y: 223.1505}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &47043014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47043012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 3105d46e36b6caf4e9494f63eb149f66, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &47043015
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47043012}
+  m_CullTransparentMesh: 1
 --- !u!4 &49112488 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4891496317306934261, guid: fe8749275d701b4418ca6a811ea83976, type: 3}
@@ -10808,7 +10884,7 @@ Transform:
   m_LocalScale: {x: 0.6666667, y: 0.6666667, z: 0.6666667}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1826831603}
+  m_Father: {fileID: 9212053720231786554}
   m_LocalEulerAnglesHint: {x: 0, y: 191.117, z: 0}
 --- !u!114 &588915559
 MonoBehaviour:
@@ -10847,7 +10923,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 2098959206}
+    TrackingTarget: {fileID: 9212053721221426655}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -11920,7 +11996,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 2098959206}
+    TrackingTarget: {fileID: 9212053721221426655}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -11956,7 +12032,7 @@ Transform:
   m_LocalScale: {x: 0.6666667, y: 0.6666667, z: 0.6666667}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2098959206}
+  m_Father: {fileID: 9212053721221426655}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &642708541
 MonoBehaviour:
@@ -13860,7 +13936,7 @@ Transform:
   m_LocalScale: {x: 5.1764083, y: 5.1764073, z: 5.1764083}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1826831603}
+  m_Father: {fileID: 9212053720231786554}
   m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
 --- !u!23 &734670438
 MeshRenderer:
@@ -18043,6 +18119,8 @@ RectTransform:
   - {fileID: 1983420694}
   - {fileID: 1084342602}
   - {fileID: 38196495}
+  - {fileID: 1535289400}
+  - {fileID: 47043013}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -19982,8 +20060,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1002651288}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 11.15, y: 9.950001, z: -11.62}
+  m_LocalRotation: {x: 0, y: 0.9952976, z: -0, w: -0.09686444}
+  m_LocalPosition: {x: 10.764999, y: 1.95, z: 3.2949996}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -21299,7 +21377,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 1826831603}
+    TrackingTarget: {fileID: 9212053720231786554}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -21335,7 +21413,7 @@ Transform:
   m_LocalScale: {x: 0.6666667, y: 0.6666667, z: 0.6666667}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1826831603}
+  m_Father: {fileID: 9212053720231786554}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1066304487
 MonoBehaviour:
@@ -23956,8 +24034,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0000053644, y: 16.9}
-  m_SizeDelta: {x: 954.21075, y: 105.58145}
+  m_AnchoredPosition: {x: -0.39924, y: 27.96007}
+  m_SizeDelta: {x: 877.79474, y: 318.4544}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1158082514
 MonoBehaviour:
@@ -23979,7 +24057,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\xBFCual es el equivalente de 2/7?"
+  m_text: "\xBF?"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -24006,15 +24084,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -27712,7 +27790,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1826831603}
+  - {fileID: 9212053720231786554}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1379744906
@@ -29306,7 +29384,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1449129529
 RectTransform:
   m_ObjectHideFlags: 0
@@ -31365,6 +31443,82 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49d0e1a0411092349ab46bb76dd7e5b5, type: 3}
+--- !u!1 &1535289399
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1535289400}
+  - component: {fileID: 1535289402}
+  - component: {fileID: 1535289401}
+  m_Layer: 5
+  m_Name: puntosJ1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1535289400
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1535289399}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2031619611}
+  m_Father: {fileID: 888435834}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -718.5194, y: -428.42517}
+  m_SizeDelta: {x: 467.9434, y: 223.1505}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1535289401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1535289399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 87f956592bc030642b9e8eb86da3179a, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1535289402
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1535289399}
+  m_CullTransparentMesh: 1
 --- !u!1001 &1537536527
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32620,7 +32774,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 8/18
+  m_text: 3/6
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -35352,7 +35506,7 @@ Transform:
   m_LocalScale: {x: 0.6666667, y: 0.6666667, z: 0.6666667}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2098959206}
+  m_Father: {fileID: 9212053721221426655}
   m_LocalEulerAnglesHint: {x: -180, y: 0, z: 0}
 --- !u!199 &1711408919
 ParticleSystemRenderer:
@@ -41980,11 +42134,6 @@ PrefabInstance:
       addedObject: {fileID: 2092632251}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1aaf45fea9e84da4dbd0224c5d4c2ffe, type: 3}
---- !u!4 &1826831603 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9212053721651348683, guid: 1aaf45fea9e84da4dbd0224c5d4c2ffe, type: 3}
-  m_PrefabInstance: {fileID: 1826831601}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1830601782
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42160,7 +42309,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2098959206}
+  - {fileID: 9212053721221426655}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1845522581
@@ -45535,6 +45684,9 @@ MonoBehaviour:
   - {fileID: 1831867310}
   - {fileID: 1374575987}
   animadoresJugadores: []
+  textosPuntajesJugadores:
+  - {fileID: 2031619612}
+  - {fileID: 1977860225}
   camarasVirtualesJugadores:
   - {fileID: 642708538}
   - {fileID: 1066304484}
@@ -45561,73 +45713,110 @@ MonoBehaviour:
   velocidadRotacion: 15
   preguntasConfiguradas:
   - numeroCasilla: 1
-    textoContexto: Contexto pregunta 1
-    textoPregunta: "\xBFCual es el equivalente de 4/8?"
+    textoContexto: "\xA1Imag\xEDnate una pizza entera y deliciosa! Si la cortas en
+      4 rebanadas exactamente iguales, el n\xFAmero de abajo (denominador) ser\xE1
+      un 4. Si te comes 1 rebanada, el n\xFAmero de arriba (numerador) ser\xE1 un
+      1. \xA1El n\xFAmero de abajo dice en cu\xE1ntas partes cortas todo, y el de
+      arriba cu\xE1ntas partes tomas!"
+    textoPregunta: "Si cortas un pastel en 6 partes iguales y te sirves 2 pedazos
+      en tu plato, \xBFqu\xE9 fracci\xF3n del pastel tienes?"
     "imagenAcompa\xF1ante": {fileID: 0}
-    objetosOpciones:
-    - {fileID: 1588385786}
-    - {fileID: 2003505433}
-    - {fileID: 1592784603}
-    opcionCorrecta: 0
-  - numeroCasilla: 2
-    textoContexto: Contexto pregunta 1
-    textoPregunta: "\xBFCual es el equivalente de 4/8?"
-    "imagenAcompa\xF1ante": {fileID: 0}
-    objetosOpciones:
-    - {fileID: 1588385786}
-    - {fileID: 2003505433}
-    - {fileID: 1592784603}
-    opcionCorrecta: 0
-  - numeroCasilla: 3
-    textoContexto: Contexto pregunta 1
-    textoPregunta: "\xBFCual es el equivalente de 4/8?"
-    "imagenAcompa\xF1ante": {fileID: 0}
-    objetosOpciones:
-    - {fileID: 1588385786}
-    - {fileID: 2003505433}
-    - {fileID: 1592784603}
-    opcionCorrecta: 0
-  - numeroCasilla: 4
-    textoContexto: Contexto pregunta 1
-    textoPregunta: "\xBFCual es el equivalente de 4/8?"
-    "imagenAcompa\xF1ante": {fileID: 0}
-    objetosOpciones:
-    - {fileID: 1588385786}
-    - {fileID: 2003505433}
-    - {fileID: 1592784603}
-    opcionCorrecta: 0
-  - numeroCasilla: 5
-    textoContexto: Contexto pregunta 1
-    textoPregunta: "\xBFCual es el equivalente de 4/8?"
-    "imagenAcompa\xF1ante": {fileID: 0}
-    objetosOpciones:
-    - {fileID: 1588385786}
-    - {fileID: 2003505433}
-    - {fileID: 1592784603}
+    opcionesTextos:
+    - 2/6
+    - 4/6
+    - 2/8
     opcionCorrecta: 0
   - numeroCasilla: 6
-    textoContexto: Contexto pregunta 1
-    textoPregunta: "\xBFCual es el equivalente de 4/8?"
+    textoContexto: "Tienes una barra de chocolate dividida en 3 rect\xE1ngulos iguales.
+      Si te comes los 3 rect\xE1ngulos, \xA1te habr\xE1s comido el chocolate entero!
+      Recuerda esto: cuando el n\xFAmero de arriba (numerador) es exactamente igual
+      al n\xFAmero de abajo (denominador), la fracci\xF3n representa un objeto completo,
+      es decir, la unidad"
+    textoPregunta: "La profesora dibuja una manzana completa en el tablero. \xBFCu\xE1l
+      de estas fracciones representa a esa manzana entera?"
     "imagenAcompa\xF1ante": {fileID: 0}
-    objetosOpciones:
-    - {fileID: 1588385786}
-    - {fileID: 2003505433}
-    - {fileID: 1592784603}
+    opcionesTextos:
+    - 6/7
+    - 1/3
+    - 4/4
+    opcionCorrecta: 2
+  - numeroCasilla: 11
+    textoContexto: "Pedro y Mar\xEDa tienen dos pasteles id\xE9nticos. Pedro parte
+      el suyo en 2 pedazos grandes y se come 1 (1/2). Mar\xEDa parte el suyo en 4
+      pedazos m\xE1s peque\xF1os y se come 2 (2/4). Aunque Mar\xEDa comi\xF3 m\xE1s
+      pedazos, \xA1los dos comieron exactamente la misma cantidad de pastel! A esto
+      lo llamamos fracciones equivalentes."
+    textoPregunta: "Si tienes media pizza (1/2), \xBFcu\xE1l de las siguientes fracciones
+      es equivalente y representa tambi\xE9n exactamente la mitad?"
+    "imagenAcompa\xF1ante": {fileID: 0}
+    opcionesTextos:
+    - 1/3
+    - 3/6
+    - 3/3
+    opcionCorrecta: 1
+  - numeroCasilla: 17
+    textoContexto: "Dos carros compiten en una pista dividida en 10 partes iguales.
+      El carro azul ha recorrido 7/10 de la pista y el carro rojo ha recorrido 4/10.
+      Cuando dos fracciones tienen el mismo n\xFAmero abajo (denominador), la fracci\xF3n
+      que tenga el n\xFAmero de arriba m\xE1s grande es la que representa una cantidad
+      mayor."
+    textoPregunta: "Si dos hermanos est\xE1n leyendo el mismo libro, Juan ha le\xEDdo
+      5/8 del libro y Sof\xEDa ha le\xEDdo 3/8, \xBFqui\xE9n va m\xE1s adelantado
+      en la lectura?"
+    "imagenAcompa\xF1ante": {fileID: 0}
+    opcionesTextos:
+    - Juan
+    - Sofia
+    - Iguales
     opcionCorrecta: 0
-  - numeroCasilla: 7
-    textoContexto: Contexto pregunta 1
-    textoPregunta: "\xBFCual es el equivalente de 4/8?"
+  - numeroCasilla: 23
+    textoContexto: "Las fracciones no solo sirven para romper comida, \xA1tambi\xE9n
+      sirven para contar grupos de cosas! Si tienes un grupo de 5 juguetes en tu
+      caja y 3 de ellos son carritos, el total del grupo (5) se pone abajo y lo que
+      quieres contar (3 carritos) se pone arriba. \xA1As\xED de f\xE1cil es armar
+      una fracci\xF3n con tus juguetes!"
+    textoPregunta: "En un \xE1rbol hay 7 pajaritos sentados en una rama. Si 4 pajaritos
+      son de color azul y el resto son amarillos, \xBFqu\xE9 fracci\xF3n del grupo
+      representa a los pajaritos azules?"
     "imagenAcompa\xF1ante": {fileID: 0}
-    objetosOpciones:
-    - {fileID: 1588385786}
-    - {fileID: 2003505433}
-    - {fileID: 1592784603}
+    opcionesTextos:
+    - 3/6
+    - 4/7
+    - 5/8
+    opcionCorrecta: 1
+  - numeroCasilla: 29
+    textoContexto: "Cuando divides un objeto entero en exactamente 2 partes iguales,
+      cada una de esas partes es la mitad de todo. En matem\xE1ticas se llama 'un
+      medio' y se escribe como 1/2."
+    textoPregunta: "Si partes una naranja a la mitad para compartirla con un amigo,
+      \xBFqu\xE9 fracci\xF3n representa el pedazo que te queda a ti?"
+    "imagenAcompa\xF1ante": {fileID: 0}
+    opcionesTextos:
+    - 1/2
+    - 1/3
+    - 3/3
+    opcionCorrecta: 0
+  - numeroCasilla: 35
+    textoContexto: "Los cuartos aparecen cuando cortamos un objeto entero en 4 partes
+      que son completamente iguales en tama\xF1o. Cada una de esas cuatro partes
+      sueltas se representa como 1/4."
+    textoPregunta: "Un reloj de pared se puede dividir en 4 partes iguales de 15
+      minutos cada una. \xBFQu\xE9 fracci\xF3n representa una sola de esas partes?"
+    "imagenAcompa\xF1ante": {fileID: 0}
+    opcionesTextos:
+    - 
+    - 
+    - 
     opcionCorrecta: 0
   panelContextoUI: {fileID: 1430006486}
   textoContextoUI: {fileID: 1461343670}
   panelPreguntaUI: {fileID: 1449129528}
   textoPreguntaUI: {fileID: 1158082514}
   imagenPreguntaUI: {fileID: 0}
+  textosOpcionesUI:
+  - {fileID: 1588385788}
+  - {fileID: 2003505435}
+  - {fileID: 1592784605}
   resaltadosOpciones:
   - {fileID: 816001502}
   - {fileID: 1118387764}
@@ -45817,6 +46006,143 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6050794363772802145, guid: 5fe99a1fac0a3004cafced165f34aba2, type: 3}
   m_PrefabInstance: {fileID: 1499073385}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1977860223
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1977860224}
+  - component: {fileID: 1977860226}
+  - component: {fileID: 1977860225}
+  m_Layer: 5
+  m_Name: puntos2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1977860224
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977860223}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 47043013}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 84, y: -9}
+  m_SizeDelta: {x: 184.4754, y: 50.0035}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1977860225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977860223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 0
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 76
+  m_fontSizeBase: 76
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1977860226
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977860223}
+  m_CullTransparentMesh: 1
 --- !u!1 &1983420693
 GameObject:
   m_ObjectHideFlags: 0
@@ -47227,6 +47553,143 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6050794363772802145, guid: 5fe99a1fac0a3004cafced165f34aba2, type: 3}
   m_PrefabInstance: {fileID: 244019732}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2031619610
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2031619611}
+  - component: {fileID: 2031619613}
+  - component: {fileID: 2031619612}
+  m_Layer: 5
+  m_Name: puntos1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2031619611
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031619610}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1535289400}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 84, y: -9}
+  m_SizeDelta: {x: 184.4754, y: 50.0035}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2031619612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031619610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 0
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 76
+  m_fontSizeBase: 76
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &2031619613
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031619610}
+  m_CullTransparentMesh: 1
 --- !u!4 &2031950274 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3581788051711781632, guid: 20defdf087831834e9fe91491e024973, type: 3}
@@ -48739,7 +49202,7 @@ Transform:
   m_LocalScale: {x: 0.6666667, y: 0.6666667, z: 0.6666667}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1826831603}
+  m_Father: {fileID: 9212053720231786554}
   m_LocalEulerAnglesHint: {x: -180, y: 0, z: 0}
 --- !u!199 &2092632252
 ParticleSystemRenderer:
@@ -53554,11 +54017,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2618196260477866227, guid: 49d0e1a0411092349ab46bb76dd7e5b5, type: 3}
   m_PrefabInstance: {fileID: 18009405}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &2098959206 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9212053721651348683, guid: 1aaf45fea9e84da4dbd0224c5d4c2ffe, type: 3}
-  m_PrefabInstance: {fileID: 737143060}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2100512425 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3581788051711781632, guid: 20defdf087831834e9fe91491e024973, type: 3}
@@ -54975,8 +55433,18 @@ Transform:
   m_LocalScale: {x: 5.1764083, y: 5.1764073, z: 5.176408}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2098959206}
+  m_Father: {fileID: 9212053721221426655}
   m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
+--- !u!4 &9212053720231786554 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9212053721651348683, guid: 1aaf45fea9e84da4dbd0224c5d4c2ffe, type: 3}
+  m_PrefabInstance: {fileID: 1826831601}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &9212053721221426655 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9212053721651348683, guid: 1aaf45fea9e84da4dbd0224c5d4c2ffe, type: 3}
+  m_PrefabInstance: {fileID: 737143060}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

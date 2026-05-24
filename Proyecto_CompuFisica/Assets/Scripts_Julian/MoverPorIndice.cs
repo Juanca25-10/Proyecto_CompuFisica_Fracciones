@@ -24,9 +24,9 @@ public class JuegoTablero : MonoBehaviour
         [Tooltip("Imagen opcional para ilustrar la pregunta en la UI")]
         public Sprite imagenAcompañante;
 
-        [Header("Opciones de Respuesta (Libres)")]
-        [Tooltip("Arrastra aquí los 3 GameObjects que representan las opciones. [0] = Z, [1] = X, [2] = C.")]
-        public GameObject[] objetosOpciones = new GameObject[3];
+        [Header("Opciones de Respuesta (Texto)")]
+        [Tooltip("Escribe aquí las 3 opciones. [0] = Texto para Z, [1] = Texto para X, [2] = Texto para C.")]
+        public string[] opcionesTextos = new string[3];
 
         [Tooltip("Opción correcta: 0 para Z, 1 para X, 2 para C")]
         [Range(0, 2)] public int opcionCorrecta;
@@ -35,6 +35,11 @@ public class JuegoTablero : MonoBehaviour
     [Header("Jugadores")]
     public GameObject[] jugadores;
     public Animator[] animadoresJugadores;
+
+    [Header("Sistema de Puntos")]
+    [Tooltip("Arrastra aquí los TextMeshPro de puntaje de cada jugador (Elemento 0 = Jugador 1, Elemento 1 = Jugador 2)")]
+    public TMP_Text[] textosPuntajesJugadores;
+    private int[] puntajesJugadores;
 
     [Header("Cámaras Cinemachine Normales")]
     public GameObject[] camarasVirtualesJugadores;
@@ -76,6 +81,9 @@ public class JuegoTablero : MonoBehaviour
     public GameObject panelPreguntaUI;
     public TMP_Text textoPreguntaUI;
     public Image imagenPreguntaUI;
+
+    [Tooltip("Arrastra aquí los 3 componentes de texto de la UI donde se mostrarán las opciones. [0]=Z, [1]=X, [2]=C")]
+    public TMP_Text[] textosOpcionesUI = new TMP_Text[3];
     public GameObject[] resaltadosOpciones = new GameObject[3];
 
     [Header("Retroalimentación Visual (Alertas UI)")]
@@ -106,6 +114,7 @@ public class JuegoTablero : MonoBehaviour
             casillasActuales = new int[jugadores.Length];
             posicionesDeseadas = new Vector3[jugadores.Length];
             estaMoviendose = new bool[jugadores.Length];
+            puntajesJugadores = new int[jugadores.Length];
 
             if (animadoresJugadores == null || animadoresJugadores.Length == 0)
             {
@@ -133,8 +142,9 @@ public class JuegoTablero : MonoBehaviour
         if (alertaRespuestaCorrecta != null) alertaRespuestaCorrecta.SetActive(false);
         if (alertaRespuestaIncorrecta != null) alertaRespuestaIncorrecta.SetActive(false);
 
-        OcultarTodasLasOpcionesConfiguradas();
+        ActualizarResaltadosUI(-1);
         PonerTodosEnIdle();
+        ActualizarTextoPuntajesUI();
     }
 
     private void Start()
@@ -249,7 +259,7 @@ public class JuegoTablero : MonoBehaviour
 
         yield return StartCoroutine(MoverFichaPasoAPaso(turnoActual, casillaAnterior, nuevaCasilla));
 
-        // --- SISTEMA DE QUIZ CON NUEVAS CÁMARAS Y ALERTAS ---
+        // --- SISTEMA DE QUIZ CON CÁMARAS Y TEXTOS ---
         DatosQuiz quizDeEstaCasilla = ObtenerQuizDeCasillaActual(casillasActuales[turnoActual]);
         if (quizDeEstaCasilla != null)
         {
@@ -307,23 +317,8 @@ public class JuegoTablero : MonoBehaviour
     }
 
     // =========================================================================
-    // LÓGICA DEL QUIZ
+    // LÓGICA DEL QUIZ (MODIFICADA PARA TEXTO EN UI)
     // =========================================================================
-
-    private void OcultarTodasLasOpcionesConfiguradas()
-    {
-        if (preguntasConfiguradas == null) return;
-        foreach (var quiz in preguntasConfiguradas)
-        {
-            if (quiz.objetosOpciones != null)
-            {
-                foreach (var obj in quiz.objetosOpciones)
-                {
-                    if (obj != null) obj.SetActive(false);
-                }
-            }
-        }
-    }
 
     private DatosQuiz ObtenerQuizDeCasillaActual(int numeroCasilla)
     {
@@ -333,7 +328,7 @@ public class JuegoTablero : MonoBehaviour
 
     private IEnumerator ManejarSecuenciaQuizCinematico(DatosQuiz quiz)
     {
-        // 1. Mostrar Alerta de Entrada JUSTO al caer (Aún usando la cámara normal)
+        // 1. Mostrar Alerta de Entrada JUSTO al caer
         yield return StartCoroutine(MostrarAlertaTemporal(alertaLlegadaPregunta));
 
         // 2. Cambiar a Cámara de Quiz (Primer plano)
@@ -343,7 +338,6 @@ public class JuegoTablero : MonoBehaviour
         if (camarasQuizJugadores.Length > turnoActual && camarasQuizJugadores[turnoActual] != null)
             camarasQuizJugadores[turnoActual].SetActive(true);
 
-        // Esperar a que la cámara termine su transición suave
         yield return new WaitForSeconds(2);
 
         // 3. Mostrar UI de Contexto
@@ -353,31 +347,36 @@ public class JuegoTablero : MonoBehaviour
             panelContextoUI.SetActive(true);
         }
 
-        // Esperar Enter
+        // Esperar Enter para avanzar del contexto a la pregunta
         yield return new WaitUntil(() => Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame);
         if (panelContextoUI != null) panelContextoUI.SetActive(false);
-        yield return new WaitForSeconds(0.2f); // Respiro
+        yield return new WaitForSeconds(0.2f);
 
-        // 4. Mostrar UI de Pregunta y Activar opciones
+        // 4. Mostrar UI de Pregunta e inyectar los textos en los botones
         if (panelPreguntaUI != null)
         {
             if (textoPreguntaUI != null) textoPreguntaUI.text = quiz.textoPregunta;
             if (imagenPreguntaUI != null) imagenPreguntaUI.sprite = quiz.imagenAcompañante;
-            panelPreguntaUI.SetActive(true);
-        }
 
-        if (quiz.objetosOpciones != null)
-        {
-            for (int i = 0; i < 3; i++)
-                if (quiz.objetosOpciones.Length > i && quiz.objetosOpciones[i] != null)
-                    quiz.objetosOpciones[i].SetActive(true);
+            // Inyectar los strings del inspector en los textos de la UI
+            if (textosOpcionesUI != null)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    if (textosOpcionesUI.Length > i && textosOpcionesUI[i] != null && quiz.opcionesTextos.Length > i)
+                    {
+                        textosOpcionesUI[i].text = quiz.opcionesTextos[i];
+                    }
+                }
+            }
+            panelPreguntaUI.SetActive(true);
         }
 
         int opcionSeleccionada = -1;
         ActualizarResaltadosUI(opcionSeleccionada);
         bool respuestaConfirmada = false;
 
-        // Bucle de selección
+        // Bucle de selección por teclado
         while (!respuestaConfirmada)
         {
             if (Keyboard.current != null)
@@ -394,21 +393,17 @@ public class JuegoTablero : MonoBehaviour
             yield return null;
         }
 
-        // Limpiar pantalla de opciones
+        // Apagar paneles de preguntas
         if (panelPreguntaUI != null) panelPreguntaUI.SetActive(false);
-        if (quiz.objetosOpciones != null)
-        {
-            for (int i = 0; i < 3; i++)
-                if (quiz.objetosOpciones.Length > i && quiz.objetosOpciones[i] != null)
-                    quiz.objetosOpciones[i].SetActive(false);
-        }
         ActualizarResaltadosUI(-1);
 
-        // 5. Evaluar respuesta y mostrar Alerta Visual (Aún en la cámara de Quiz)
+        // 5. Evaluar respuesta
         bool respondioBien = (opcionSeleccionada == quiz.opcionCorrecta);
 
         if (respondioBien)
         {
+            puntajesJugadores[turnoActual]++;
+            ActualizarTextoPuntajesUI();
             yield return StartCoroutine(MostrarAlertaTemporal(alertaRespuestaCorrecta));
         }
         else
@@ -416,17 +411,16 @@ public class JuegoTablero : MonoBehaviour
             yield return StartCoroutine(MostrarAlertaTemporal(alertaRespuestaIncorrecta));
         }
 
-        // 6. Volver a la cámara normal del jugador ANTES de moverse
+        // 6. Volver a la cámara normal del jugador
         if (camarasQuizJugadores.Length > turnoActual && camarasQuizJugadores[turnoActual] != null)
             camarasQuizJugadores[turnoActual].SetActive(false);
 
         if (camarasVirtualesJugadores.Length > turnoActual && camarasVirtualesJugadores[turnoActual] != null)
             camarasVirtualesJugadores[turnoActual].SetActive(true);
 
-        // Esperar a que la cámara normal regrese por completo
         yield return new WaitForSeconds(tiempoTransicionCamara);
 
-        // 7. Si acertó, mover al personaje (ahora la cámara normal lo verá correr)
+        // 7. Si acertó, avanzar las 3 casillas de bonificación
         if (respondioBien)
         {
             int casillaActual = casillasActuales[turnoActual];
@@ -453,6 +447,18 @@ public class JuegoTablero : MonoBehaviour
         for (int i = 0; i < 3; i++)
             if (resaltadosOpciones[i] != null)
                 resaltadosOpciones[i].SetActive(i == indiceSeleccionado);
+    }
+
+    private void ActualizarTextoPuntajesUI()
+    {
+        if (textosPuntajesJugadores == null) return;
+        for (int i = 0; i < textosPuntajesJugadores.Length; i++)
+        {
+            if (textosPuntajesJugadores[i] != null && i < puntajesJugadores.Length)
+            {
+                textosPuntajesJugadores[i].text = puntajesJugadores[i].ToString();
+            }
+        }
     }
 
     // =========================================================================
