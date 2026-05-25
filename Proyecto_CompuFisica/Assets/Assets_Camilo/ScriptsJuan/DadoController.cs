@@ -1,34 +1,24 @@
 using UnityEngine;
 using System.IO.Ports;
 using System;
-using UnityEngine.Events;
 
 public class DadoController : MonoBehaviour
 {
     [Header("Configuración del Puerto")]
-    // Cambia "COM3" por el puerto real de tu Arduino en Windows
-    public string puertoCOM = "COM11";
+    public string puertoCOM = "COM11"; // Asegúrate de que sea tu puerto
     private SerialPort puerto;
 
     [Header("Acelerómetro")]
     public float sensibilidadAgitacion = 25000f;
 
-    [Header("Eventos de los 4 Botones")]
-    public UnityEvent[] alPresionarBoton = new UnityEvent[4];
     private bool[] estadoAnterior = new bool[4];
 
     void Start()
     {
         puerto = new SerialPort(puertoCOM, 9600);
         puerto.ReadTimeout = 20;
-        try
-        {
-            puerto.Open();
-        }
-        catch (Exception e)
-        {
-            Debug.LogError("No se pudo abrir el puerto: " + e.Message);
-        }
+        try { puerto.Open(); }
+        catch (Exception e) { Debug.LogError("No se pudo abrir el puerto: " + e.Message); }
     }
 
     void Update()
@@ -44,7 +34,7 @@ public class DadoController : MonoBehaviour
                 string[] botones = partes[0].Split(',');
                 string[] aceleracion = partes[1].Split(',');
 
-                // Leer botones
+                // Leer los 4 botones
                 for (int i = 0; i < 4; i++)
                 {
                     bool presionadoAhora = (botones[i] == "1");
@@ -52,12 +42,37 @@ public class DadoController : MonoBehaviour
                     if (presionadoAhora && !estadoAnterior[i])
                     {
                         Debug.Log("Clic físico en botón índice: " + i);
-                        alPresionarBoton[i].Invoke();
+
+                        // ===== AUTO-CONEXIÓN MÁGICA =====
+                        // Índice 0 = Botón Rojo (Z)
+                        if (i == 0)
+                        {
+                            if (JuegoTablero.Instancia != null) JuegoTablero.Instancia.PresionarFisicoRojo();
+                            if (MenuPrincipal.Instancia != null) MenuPrincipal.Instancia.AccionEmpezar();
+                        }
+                        // Índice 1 = Botón Azul (X)
+                        else if (i == 1)
+                        {
+                            if (JuegoTablero.Instancia != null) JuegoTablero.Instancia.PresionarFisicoAzul();
+                            if (MenuPrincipal.Instancia != null) MenuPrincipal.Instancia.AccionAjustes();
+                        }
+                        // Índice 2 = Botón Verde (C)
+                        else if (i == 2)
+                        {
+                            if (JuegoTablero.Instancia != null) JuegoTablero.Instancia.PresionarFisicoVerde();
+                            if (MenuPrincipal.Instancia != null) MenuPrincipal.Instancia.AccionComoJugar();
+                        }
+                        // Índice 3 = Botón Blanco (V)
+                        else if (i == 3)
+                        {
+                            if (JuegoTablero.Instancia != null) JuegoTablero.Instancia.PresionarFisicoBlanco();
+                            if (MenuPrincipal.Instancia != null) MenuPrincipal.Instancia.AccionSalir();
+                        }
                     }
                     estadoAnterior[i] = presionadoAhora;
                 }
 
-                // Leer agitación del MPU
+                // Leer agitación
                 float acX = float.Parse(aceleracion[0]);
                 float acY = float.Parse(aceleracion[1]);
                 float acZ = float.Parse(aceleracion[2]);
@@ -66,12 +81,10 @@ public class DadoController : MonoBehaviour
 
                 if (fuerzaMovimiento.magnitude > sensibilidadAgitacion)
                 {
-                    // Enviar sonido de vibración al Arduino
-                    puerto.Write("V");
+                    puerto.Write("V"); // Sonido vibración Arduino
 
-                    // Ordenar al tablero lanzar el dado
-                    JuegoTablero juego = FindObjectOfType<JuegoTablero>();
-                    if (juego != null) juego.LanzarDadoFisico();
+                    if (JuegoTablero.Instancia != null) JuegoTablero.Instancia.LanzarDadoFisico();
+                    if (MenuPrincipal.Instancia != null) MenuPrincipal.Instancia.EfectoAgitarHardware();
                 }
             }
             catch (TimeoutException) { }
@@ -81,10 +94,7 @@ public class DadoController : MonoBehaviour
 
     public void ActivarBuzzer()
     {
-        if (puerto != null && puerto.IsOpen)
-        {
-            puerto.Write("B");
-        }
+        if (puerto != null && puerto.IsOpen) puerto.Write("B");
     }
 
     void OnApplicationQuit()
