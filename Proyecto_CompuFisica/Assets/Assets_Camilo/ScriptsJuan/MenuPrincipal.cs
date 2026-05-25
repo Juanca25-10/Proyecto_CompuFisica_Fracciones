@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class MenuPrincipal : MonoBehaviour
 {
@@ -102,18 +103,18 @@ public class MenuPrincipal : MonoBehaviour
         // MODO PRUEBA (NUEVO INPUT SYSTEM)
         if (Keyboard.current != null)
         {
-            if (Keyboard.current.zKey.wasPressedThisFrame) AccionAjustes();
-            if (Keyboard.current.xKey.wasPressedThisFrame) AccionComoJugar();
-            if (Keyboard.current.cKey.wasPressedThisFrame) AccionCreditos();
+            if (Keyboard.current.zKey.wasPressedThisFrame) AccionEmpezar();
+            if (Keyboard.current.xKey.wasPressedThisFrame) AccionAjustes();
+            if (Keyboard.current.cKey.wasPressedThisFrame) AccionComoJugar();
             if (Keyboard.current.vKey.wasPressedThisFrame) AccionSalir();
 
             if (Keyboard.current.spaceKey.wasPressedThisFrame) EfectoAgitarHardware();
         }
     }
 
+    public void AccionEmpezar() { SceneManager.LoadScene("escenaPruebaJulian"); }
     public void AccionAjustes() { Debug.Log("Abriendo AJUSTES..."); }
-    public void AccionComoJugar() { Debug.Log("Abriendo CÓMO JUGAR..."); }
-    public void AccionCreditos() { Debug.Log("Abriendo CRÉDITOS..."); }
+    public void AccionComoJugar() { Debug.Log("Abriendo COMO JUGAR..."); }
     public void AccionSalir() { Application.Quit(); }
 
     public void EfectoAgitarHardware()
