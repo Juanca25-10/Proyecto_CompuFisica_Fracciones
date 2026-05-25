@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/EscenaMenu.unity
     guid: c5ea39f0eaa2d5041a7b15ad38957c5b
   - enabled: 1
+    path: Assets/Scenes/escenaPruebaJulian.unity
+    guid: b4204a8695ddd244f9bc5cc2f567d8e3
+  - enabled: 0
     path: Assets/Scenes/EscenaPrincipal.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
